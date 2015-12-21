@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Virtual DOM
+		</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	</head>
+	<body>
+
+    <div class="container">
+      <div class="row">
+          <h2>React Table</h2>
+          <table id="reactRoot" class="table table-striped table-bordered">
+          </table>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js"></script>
+		<script src="immutable.js"></script>
+    <script src="common.js"></script>
+		<script>
+      var td = React.createClass({
+				shouldComponentUpdate: function(nextProps, nextState) {
+				  //return nextProps.id !== this.props.id;
+					return true;
+				},
+				getInitialState: function() {
+					return {};
+				},
+        render: function() {
+          return React.createElement('td', null, this.props.value);
+        }
+      });
+
+      var tr = React.createClass({
+				shouldComponentUpdate: function(nextProps, nextState) {
+				  //return nextProps.id !== this.props.id;
+					return true;
+				},
+				getInitialState: function() {
+					return {};
+				},
+        render: function() {
+          return (
+            React.createElement('tr', null, this.props.value.map(function(result, index) {
+              return React.createElement(td, {value: result, key: index});
+            }))
+          )
+        }
+      })
+
+      var reactTable = React.createClass({
+				shouldComponentUpdate: function(nextProps, nextState) {
+				  //return nextProps.id !== this.props.id;
+					return true;
+				},
+				// getInitialState: function() {
+				// 	var o = {};
+				// 	o.matrix = getData();
+				// 	return o;
+				// },
+        render: function() {
+            return React.createElement('tbody', null, this.props.matrix.map(function(result, index) {
+              return React.createElement(tr, {value: result, key: index})
+            }));
+        }
+      });
+
+      var reactRoot = document.getElementById('reactRoot');
+      var e = React.render(React.createElement(reactTable, { matrix: getData() }), reactRoot);
+
+			setInterval(function repeat() {
+				var o = {};
+       	o.matrix = getData();
+
+        React.render(React.createElement(reactTable, { matrix: o.matrix }), reactRoot);
+        // e.setProps({value: data})
+				//e.setState(o);
+			}, 0);
+
+      // window.requestAnimationFrame(function raf(){
+			// 	var o = {};
+      //  	o.matrix = getData();
+			//
+      //   //React.render(React.createElement(reactTable, { value: data }), reactRoot);
+      //   // e.setProps({value: data})
+			// 	e.setState(o);
+			//
+      //   window.requestAnimationFrame(raf);
+      // });
+
+    </script>
+  </body>
+</html>

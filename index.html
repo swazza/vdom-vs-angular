@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Virtual DOM
+		</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	</head>
+	<body>
+
+    <div class="container">
+      <div class="row">
+        <h2>Virtual Dom Table</h2>
+        <table id="vdomRoot" class="table table-striped table-bordered">
+        </table>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="v-dom.js"></script>
+		<script src="common.js"></script>
+		<script>
+			var h = virtualDom.h,
+				createElement = virtualDom.create,
+				diff = virtualDom.diff,
+				patch = virtualDom.patch;
+
+      function render(context) {
+        return h('tbody', function(){
+
+          var rows = [];
+          for (var i = 0; i < numRows; i++) {
+            var cols = []
+            for (var j = 0; j < numCols; j++) {
+              cols.push(
+                h('td', [context[i][j]])
+              )
+            }
+
+            rows.push(
+              h('tr', cols)
+            )
+          }
+
+          return rows
+
+        }())
+      };
+
+			var tree = render(getData());               // We need an initial tree
+			var rootNode = createElement(tree);     // Create an initial root DOM node ...
+      var vdom = document.getElementById("vdomRoot");
+      vdom.appendChild(rootNode);
+
+			setInterval(function () {
+				var newTree = render(getData());               // We need an initial tree
+				var patches = diff(tree, newTree);
+				rootNode = patch(rootNode, patches);
+				tree = newTree;
+			}, 0);
+
+		</script>
+  </body>
+</html>
